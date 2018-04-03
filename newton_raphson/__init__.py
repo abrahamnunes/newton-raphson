@@ -5,3 +5,5 @@
 __author__ = """Abraham Nunes"""
 __email__ = 'nunes@dal.ca'
 __version__ = '0.1.0'
+
+from newton_raphson.newton_raphson import logistic_regression
