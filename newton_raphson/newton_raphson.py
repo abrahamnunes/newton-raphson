@@ -114,7 +114,7 @@ class LogisticRegressionResult(object):
         })
         self.model_summary = pd.DataFrame({
             'Deviance'  : [self.deviance],
-            'p-Value'   : [self.p_model],
+            'p-value'   : [self.p_model],
             'AIC'       : [self.aic],
             'BIC'       : [self.bic]
         })
