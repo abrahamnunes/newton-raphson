@@ -177,7 +177,7 @@ def compute_hessian(X, XT, y, yhat):
 def convergence_test(k,dx,J,glen,toliter,tolx,tolgrad,verbose):
     """ Checks for satisfaction of convergence criteria """
     # Print current iteration statistics if indicated
-    if verbose==2:
+    if verbose > 0:
         print('Iter %s | J=%s | L2(dw)=%s | L2(g) = %s' %((k,J,dx,glen)))
 
     hit_toliter = np.greater(k, toliter)
@@ -185,7 +185,7 @@ def convergence_test(k,dx,J,glen,toliter,tolx,tolgrad,verbose):
     hit_tolg    = np.less(glen, tolgrad)
     if hit_toliter or hit_tolx or hit_tolg:
         msg = ''.join(str(int(j)) for j in [hit_toliter,hit_tolx,hit_tolg])
-        if verbose > 0:
+        if verbose == 1:
             print('Newton-Raphson Terminated with message %s' %msg)
         done = True
     else:
