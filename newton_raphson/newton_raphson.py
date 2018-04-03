@@ -110,20 +110,24 @@ class LogisticRegressionResult(object):
             'Estimate'  : self.coef,
             'Odds-Ratio': np.exp(self.coef),
             'SE'        : self.se,
-            'p_coefs'   : self.p_coefs
+            'p-value'   : self.p_coefs
         })
         self.model_summary = pd.DataFrame({
             'Deviance'  : [self.deviance],
-            'p_model'   : [self.p_model],
+            'p-Value'   : [self.p_model],
             'AIC'       : [self.aic],
             'BIC'       : [self.bic]
         })
 
     def summary(self):
         print('================= Coefficient Fit Statistics =================')
-        print(self.coefs_summary)
-        print('================= Model Fit Statistics =================')
-        print(self.model_summary)
+        print(self.coefs_summary[['Parameter',
+                                  'Estimate',
+                                  'Odds-Ratio',
+                                  'SE',
+                                  'p-value']])
+        print('=================    Model Fit Statistics    =================')
+        print(self.model_summary[['Deviance', 'p-value', 'AIC', 'BIC']])
 
 # ==============================================================================
 #   Functions to be used in logistic_regression object. Written here to make
