@@ -1,9 +1,10 @@
 
 # Newton-Raphson Logistic Regression
-![https://travis-ci.org/abrahamnunes/newton_raphson](https://img.shields.io/travis/abrahamnunes/newton_raphson.svg) ![https://newton-raphson.readthedocs.io/en/latest/?badge=latest](https://readthedocs.org/projects/newton-raphson/badge/?version=latest)
+
+![https://zenodo.org/badge/latestdoi/127929528](https://zenodo.org/badge/127929528.svg) ![https://travis-ci.org/abrahamnunes/newton_raphson](https://img.shields.io/travis/abrahamnunes/newton_raphson.svg) ![https://newton-raphson.readthedocs.io/en/latest/?badge=latest](https://readthedocs.org/projects/newton-raphson/badge/?version=latest)
 
 
-An implementation of logistic regression for association analyses using the Newton-Raphson method.
+A simple and fast Python 3+ implementation of logistic regression for association analyses using the Newton-Raphson method.
 
 - Free software: MIT license
 - Documentation: https://newton-raphson.readthedocs.io.
@@ -39,10 +40,9 @@ res.summary()
 - [ ] Add unit test for Hessian conditioning
 - [ ] Add capability to monitor each optimization iteration step
 
-## Credits
+## How to Cite
 
+If you use Newton-Raphson in your work, we would very much appreciate the citation, which can be done as follows:
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+- Abraham Nunes (2018). Newton-Raphson Logistic Regression. Zenodo. http://doi.org/10.5281/zenodo.439989
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
