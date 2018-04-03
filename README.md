@@ -1,7 +1,6 @@
 
 # Newton-Raphson Logistic Regression
-
-![https://pypi.python.org/pypi/newton_raphson](https://img.shields.io/pypi/v/newton_raphson.svg) ![https://travis-ci.org/abrahamnunes/newton_raphson](https://img.shields.io/travis/abrahamnunes/newton_raphson.svg) ![https://newton-raphson.readthedocs.io/en/latest/?badge=latest](https://readthedocs.org/projects/newton-raphson/badge/?version=latest)
+![https://travis-ci.org/abrahamnunes/newton_raphson](https://img.shields.io/travis/abrahamnunes/newton_raphson.svg) ![https://newton-raphson.readthedocs.io/en/latest/?badge=latest](https://readthedocs.org/projects/newton-raphson/badge/?version=latest)
 
 
 An implementation of logistic regression for association analyses using the Newton-Raphson method.
