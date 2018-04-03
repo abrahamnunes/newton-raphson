@@ -169,7 +169,6 @@ def compute_hessian(X, XT, y, yhat):
     Notes
     -----
     This computation is `X.T@np.diag(s)@X`.
-
     """
     s    = np.einsum('i,ij->j', yhat-y, X)
     H    = (XT*np.tile(yhat*(1-yhat), [X.shape[1], 1]))@X

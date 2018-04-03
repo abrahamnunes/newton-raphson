@@ -12,7 +12,7 @@ To install Newton-Raphson, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install newton_raphson
+    $ pip install git+https://github.com/abrahamnunes/newton-raphson
 
 This is the preferred method to install Newton-Raphson, as it will always install the most recent stable release.
 
