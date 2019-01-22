@@ -74,7 +74,22 @@ class LogisticRegressionResult(object):
         Prints statistical summary tables
 
     """
-    def __init__(self, coef=None, nll=None, feval=None, grad=None, hess=None, cov=None, se=None, n=None, k=None, flg=None, tolx=None, toliter=None, tolgrad=None):
+    def __init__(self,
+                 coef=None,
+                 nll=None,
+                 feval=None,
+                 grad=None,
+                 hess=None,
+                 cov=None,
+                 se=None,
+                 se_robust=None,
+                 n=None,
+                 k=None,
+                 flg=None,
+                 tolx=None,
+                 toliter=None,
+                 tolgrad=None,
+                 robust=None):
         self.coef     = coef
         self.nll      = nll
         self.feval    = feval
@@ -82,34 +97,43 @@ class LogisticRegressionResult(object):
         self.hess     = hess
         self.cov      = cov
         self.se       = se
+        self.se_robust= se_robust
         self.n        = n
         self.k        = k
         self.flg      = flg
         self.tolx     = tolx
         self.toliter  = toliter
         self.tolgrad  = tolgrad
-        self.compute_statistics()
+        self.compute_statistics(robust)
         self.compute_hessian_conditioning()
-        self.make_summary_tables()
+        self.make_summary_tables(robust=robust)
 
-    def compute_statistics(self):
+    def compute_statistics(self, robust):
         self.deviance  = 2*self.nll
         self.aic       = 2*self.k + self.deviance
         self.bic       = self.k*np.log(self.n) + self.deviance
         self.p_model   = 1-stats.chi2.cdf(self.deviance, 1)
-        self.tstat     = self.coef/self.se
+        if robust:
+            self.tstat = self.coef/self.se_robust
+        else:
+            self.tstat = self.coef/self.se
         self.p_coefs   = 1-stats.chi2.cdf(self.tstat**2, 1)
 
     def compute_hessian_conditioning(self):
         s = np.linalg.svd(self.hess, compute_uv=False)
         self.condition = np.abs(np.max(s)/np.min(s))
 
-    def make_summary_tables(self, significance_threshold=0.05):
+    def make_summary_tables(self, significance_threshold=0.05, robust=False):
+        if robust:
+            se = self.se_robust
+        else:
+            se = self.se
+
         self.coefs_summary = pd.DataFrame({
             'Parameter' : ['Param %s' %i for i in range(self.k)],
             'Estimate'  : self.coef,
             'Odds-Ratio': np.exp(self.coef),
-            'SE'        : self.se,
+            'SE'        : se,
             'p-value'   : self.p_coefs
         })
         self.model_summary = pd.DataFrame({
@@ -201,7 +225,7 @@ def convergence_test(k,dx,J,glen,toliter,tolx,tolgrad,verbose):
 #   Main Newton-Raphson logistic regression function
 # ==============================================================================
 
-def logistic_regression(X, y, intercept=True, toliter=10000, tolx=1e-12,
+def logistic_regression(X, y, intercept=True, robust=False, toliter=10000, tolx=1e-12,
                         tolgrad=1e-12, verbose=0):
     """
     Runs logistic regression model
@@ -214,6 +238,8 @@ def logistic_regression(X, y, intercept=True, toliter=10000, tolx=1e-12,
         The response variables
     intercept : bool
         Whether to add an intercept (bias) term
+    robust: bool
+        Whether to use Huber-White sandwich estimator
     toliter : int (default=10000)
         Maximum number of iterations allowed
     tolx : float (default=1e-12)
@@ -243,15 +269,22 @@ def logistic_regression(X, y, intercept=True, toliter=10000, tolx=1e-12,
     while not done:
         oldx = x
         yhat = f_logistic(X, x)
+        g    = XT@(y-yhat)      # Gradient at current point
+        glen = norm(g)**2       # Length of gradient vector at current point
         J    = negative_log_likelihood(y, yhat)
         H, s = compute_hessian(X, XT, y, yhat)
         C    = inverse(H)
         x    = x - C@s
         k    += 1
         dx   = norm(x-oldx)**2  # Change in iterate
-        g    = XT@(y-yhat)      # Gradient at current point
-        glen = norm(g)**2       # Length of gradient vector at current point
         done, msg = convergence_test(k,dx,J,glen,toliter,tolx,tolgrad,verbose)
+
+
+    # Huber-White Sandwich Estimator
+    g = np.stack(X[i]*(y[i] - 1/(1+np.exp(-X[i]@x))) for i in range(X.shape[0]))
+    Ainv = np.linalg.pinv(-H)
+    B = g.T@g
+    V = Ainv@(B@Ainv)
 
     # Save results
     res = LogisticRegressionResult(
@@ -262,12 +295,14 @@ def logistic_regression(X, y, intercept=True, toliter=10000, tolx=1e-12,
             hess=H,
             cov=C,
             se=np.sqrt(np.diag(C)),
+            se_robust=np.sqrt(np.diag(V)),
             n=X.shape[0],
             k=X.shape[1],
             flg=msg,
             tolx=tolx,
             toliter=toliter,
-            tolgrad=tolgrad)
+            tolgrad=tolgrad,
+            robust=robust)
 
     if verbose == 3:
         print('\n\n')
