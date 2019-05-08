@@ -44,5 +44,5 @@ res.summary()
 
 If you use Newton-Raphson in your work, we would very much appreciate the citation, which can be done as follows:
 
-- Abraham Nunes (2018). Newton-Raphson Logistic Regression. Zenodo. http://doi.org/10.5281/zenodo.439989
+- Abraham Nunes (2018). Newton-Raphson Logistic Regression. Zenodo. http://doi.org/10.5281/zenodo.1211725
 
